@@ -14,14 +14,24 @@ from django.conf import settings
 
 
 # Create your views here.
+def healthScore_detail(request):
+    if request.method == 'GET':
+        prescription = Prescription.objects.all()
+        serializer = PrescriptionSerializer(prescription, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = PrescriptionSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 @csrf_exempt
 @api_view(['GET', 'POST'])
 def healthScore_detail(request):
-    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    # try:
-    # healthScore = HealthScore.objects.get(pk=pk)
-    # except HealthScore.DoesNotExist:
-    #     return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         healthScore = HealthScore.objects.all()
@@ -30,50 +40,18 @@ def healthScore_detail(request):
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        a = 3
-        b = 100
         tdelta = timedelta(days=45)
         data['expired'] = (datetime.now()+tdelta)
 
         bmi = float(
             str(round(float(data['weight']) / (float(data['height'])/100)**2, 2)))
         data['bmi'] = bmi
-        if(float(data['bmi']) < 18.5):
-            data['bmitext'] = 'You are underweight!'
-        elif(float(data['bmi']) >= 18.5 and float(data['bmi']) < 25):
-            data['bmitext'] = 'You are in healthy weight range!'
-        elif(float(data['bmi']) >= 255 and float(data['bmi']) < 30):
-            data['bmitext'] = 'You are overweight!'
-        else:
-            data['bmitext'] = 'You are obese!'
+        data['bmitext'] = bmicalculator(bmi)
+        data['creatininetext'] = creatinine_cal(float(data['creatinine']))
+        data['bloodsugartext'] = bloodsugar_cal(float(data['bloodsugar']))
+        data['cholesteroltext'] = bloodsugar_cal(float(data['cholesterol']))
+        data['bptext'] = bloodsugar_cal(float(data['diabp']),float(data['sysbp']))
 
-        if(float(data['creatinine']) < a):
-            data['creatininetext'] = 'Creatinine levels are low!'
-        elif(float(data['creatinine']) >= a and float(data['creatinine']) <= b):
-            data['creatininetext'] = 'Creatinine levels are okay!'
-        else:
-            data['creatininetext'] = 'Creatinine levels are high!'
-
-        if(float(data['bloodsugar']) < a):
-            data['bloodsugartext'] = 'Bloodsugar levels are low!'
-        elif(float(data['bloodsugar']) >= a and float(data['bloodsugar']) <= b):
-            data['bloodsugartext'] = 'Bloodsugar levels are okay!'
-        else:
-            data['bloodsugartext'] = 'Bloodsugar levels are high!'
-
-        if(float(data['cholesterol']) < a):
-            data['cholesteroltext'] = 'Cholesterol levels are low!'
-        elif(float(data['cholesterol']) >= a and float(data['creatinine']) <= b):
-            data['cholesteroltext'] = 'Cholesterol levels are okay!'
-        else:
-            data['cholesteroltext'] = 'Cholesterol levels are high!'
-
-        if(float(data['sysbp']) < a and float(data['diabp']) < a):
-            data['bptext'] = 'Blood pressure levels are low!'
-        elif(float(data['sysbp']) >= a and float(data['sysbp']) <= b and float(data['diabp']) >= a and float(data['diabp']) <= b):
-            data['bptext'] = 'Blood pressure levels are okay!'
-        else:
-            data['bptext'] = 'Blood pressure levels are high!'
 
         # SENDING A DUMMY EMAIL
         subject = "Hello world"
@@ -88,3 +66,48 @@ def healthScore_detail(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def bmicalculator(bmi):
+    if(float(bmi) < 18.5):
+        return 'You are underweight!'
+    elif(float(bmi) >= 18.5 and float(bmi) < 25):
+        return 'You are in healthy weight range!'
+    elif(float(bmi) >= 255 and float(bmi) < 30):
+        return 'You are overweight!'
+    else:
+        return 'You are obese!'
+
+def creatinine_cal(cr):
+    if(cr < 5):
+            return 'Creatinine levels are low!'
+    elif(cr >= 5 and cr <= 10):
+        return 'Creatinine levels are okay!'
+    else:
+        return 'Creatinine levels are high!'
+
+def bloodsugar_cal(bs):
+    if(bs < 5):
+        return 'Bloodsugar levels are low!'
+    elif(bs >= 5 and bs <= 10):
+        return 'Bloodsugar levels are okay!'
+    else:
+        return 'Bloodsugar levels are high!'
+
+def cholesterol_cal(cl):
+    if(cl < 5):
+        return 'Cholesterol levels are low!'
+    elif(cl >= 5 and cl <= 10):
+        return 'Cholesterol levels are okay!'
+    else:
+        return 'Cholesterol levels are high!'
+        
+def bp_cal(sysbp,diabp):
+    if(sysbp < 5 and diabp < 5):
+        return 'Blood pressure levels are low!'
+    elif(sysbp >= 5 and sysbp <= 10 and diabp >= 5 and diabp <= 10):
+        return 'Blood pressure levels are okay!'
+    else:
+        return 'Blood pressure levels are high!'
+
+
