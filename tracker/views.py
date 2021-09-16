@@ -1,16 +1,20 @@
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from .models import *
 from .serializers import *
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
-from django.utils.timezone import utc   
-import datetime
+from datetime import datetime, timedelta
+from rest_framework import permissions
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
+@csrf_exempt
 @api_view(['GET', 'POST'])
 def healthScore_detail(request):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     # try:
     # healthScore = HealthScore.objects.get(pk=pk)
     # except HealthScore.DoesNotExist:
@@ -25,11 +29,8 @@ def healthScore_detail(request):
         data = JSONParser().parse(request)
         a=3 
         b=100
-        tdelta=datetime.timedelta(days=45)
-        # data['expired'] = data['created'] + tdelta
-        # print(data['created'])
-        # print(data['expired'])
-        print(tdelta)
+        tdelta=timedelta(days=45)
+        data['expired'] = (datetime.now()+tdelta)
         bmi = float(str(round(float(data['weight']) / (float(data['height'])/100)**2,2)))
         data['bmi'] = bmi
         if(float(data['bmi'])<18.5):
