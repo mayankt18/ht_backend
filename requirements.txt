@@ -1,0 +1,4 @@
+Django==3.2.7
+cloudinary==1.26.0
+djangorestframework==3.12.4
+knox==0.1.14

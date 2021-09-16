@@ -26,5 +26,5 @@ urlpatterns = [
     path('', homepage),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    # path('tracker/', include('tracker.urls')),
+    path('tracker/', include('tracker.urls')),
 ]
