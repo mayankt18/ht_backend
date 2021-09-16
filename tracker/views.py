@@ -9,12 +9,15 @@ from rest_framework.parsers import JSONParser
 from datetime import datetime, timedelta
 from rest_framework import permissions
 from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import send_mail
+from django.conf import settings
+
 
 # Create your views here.
 @csrf_exempt
 @api_view(['GET', 'POST'])
 def healthScore_detail(request):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     # try:
     # healthScore = HealthScore.objects.get(pk=pk)
     # except HealthScore.DoesNotExist:
@@ -27,52 +30,61 @@ def healthScore_detail(request):
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        a=3 
-        b=100
-        tdelta=timedelta(days=45)
+        a = 3
+        b = 100
+        tdelta = timedelta(days=45)
         data['expired'] = (datetime.now()+tdelta)
-        bmi = float(str(round(float(data['weight']) / (float(data['height'])/100)**2,2)))
+
+        bmi = float(
+            str(round(float(data['weight']) / (float(data['height'])/100)**2, 2)))
         data['bmi'] = bmi
-        if(float(data['bmi'])<18.5):
+        if(float(data['bmi']) < 18.5):
             data['bmitext'] = 'You are underweight!'
-        elif(float(data['bmi'])>=18.5 and float(data['bmi'])<25):
+        elif(float(data['bmi']) >= 18.5 and float(data['bmi']) < 25):
             data['bmitext'] = 'You are in healthy weight range!'
-        elif(float(data['bmi'])>=255 and float(data['bmi'])<30):
+        elif(float(data['bmi']) >= 255 and float(data['bmi']) < 30):
             data['bmitext'] = 'You are overweight!'
         else:
             data['bmitext'] = 'You are obese!'
 
-        if(float(data['creatinine'])<a):
+        if(float(data['creatinine']) < a):
             data['creatininetext'] = 'Creatinine levels are low!'
-        elif(float(data['creatinine'])>=a and float(data['creatinine'])<=b):
+        elif(float(data['creatinine']) >= a and float(data['creatinine']) <= b):
             data['creatininetext'] = 'Creatinine levels are okay!'
         else:
             data['creatininetext'] = 'Creatinine levels are high!'
 
-        if(float(data['bloodsugar'])<a):
+        if(float(data['bloodsugar']) < a):
             data['bloodsugartext'] = 'Bloodsugar levels are low!'
-        elif(float(data['bloodsugar'])>=a and float(data['bloodsugar'])<=b):
+        elif(float(data['bloodsugar']) >= a and float(data['bloodsugar']) <= b):
             data['bloodsugartext'] = 'Bloodsugar levels are okay!'
         else:
             data['bloodsugartext'] = 'Bloodsugar levels are high!'
 
-        if(float(data['cholesterol'])<a):
+        if(float(data['cholesterol']) < a):
             data['cholesteroltext'] = 'Cholesterol levels are low!'
-        elif(float(data['cholesterol'])>=a and float(data['creatinine'])<=b):
+        elif(float(data['cholesterol']) >= a and float(data['creatinine']) <= b):
             data['cholesteroltext'] = 'Cholesterol levels are okay!'
         else:
             data['cholesteroltext'] = 'Cholesterol levels are high!'
 
-        if(float(data['sysbp'])<a and float(data['diabp'])<a):
+        if(float(data['sysbp']) < a and float(data['diabp']) < a):
             data['bptext'] = 'Blood pressure levels are low!'
-        elif(float(data['sysbp'])>=a and float(data['sysbp'])<=b and float(data['diabp'])>=a and float(data['diabp'])<=b):
+        elif(float(data['sysbp']) >= a and float(data['sysbp']) <= b and float(data['diabp']) >= a and float(data['diabp']) <= b):
             data['bptext'] = 'Blood pressure levels are okay!'
         else:
             data['bptext'] = 'Blood pressure levels are high!'
+
+        # SENDING A DUMMY EMAIL
+        subject = "Hello world"
+        message = "this the message of the email"
+        email_from = settings.EMAIL_HOST_USER
+        recepient_list = ['mayank9903261034@gmail.com']
+        send_mail(subject, message, email_from, recepient_list)
+        # print("mail sent")
 
         serializer = ScoreSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
