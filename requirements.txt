@@ -9,6 +9,7 @@ cloudinary==1.26.0
 cryptography==3.4.8
 decorator==5.1.0
 Django==3.2.7
+django-cors-headers==3.8.0
 django-rest-knox==4.1.0
 djangorestframework==3.12.4
 dynaconf==3.1.7
