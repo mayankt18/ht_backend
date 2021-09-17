@@ -15,6 +15,7 @@ import cloudinary.uploader
 import cloudinary
 from pathlib import Path
 import os
+import django_heroku
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -166,3 +167,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'mayank1807@gmail.com'
 EMAIL_HOST_PASSWORD = 'Rainman@65'
 EMAIL_PORT = '465'
+
+django_heroku.settings(locals())
