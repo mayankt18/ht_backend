@@ -14,8 +14,8 @@ import cloudinary.api
 import cloudinary.uploader
 import cloudinary
 from pathlib import Path
-import os
-from decouple import config
+import os 
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -151,6 +151,6 @@ cloudinary.config(
 
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = 'mayank1807@gmail.com'
+EMAIL_HOST_PASSWORD = 'Rainman@65'
 EMAIL_PORT = '465'
