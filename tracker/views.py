@@ -9,12 +9,18 @@ from rest_framework.parsers import JSONParser
 from datetime import datetime, timedelta
 from rest_framework import permissions
 from django.views.decorators.csrf import csrf_exempt
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.conf import settings
+from django.template import Context
+from django.template.loader import render_to_string, get_template
+from django.contrib.auth.models import User
+from rest_framework import permissions
 
 
 # Create your views here.
-def healthScore_detail(request):
+@api_view(['GET', 'POST'])
+def prescription(request):
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     if request.method == 'GET':
         prescription = Prescription.objects.all()
         serializer = PrescriptionSerializer(prescription, many=True)
@@ -31,10 +37,10 @@ def healthScore_detail(request):
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
-def healthScore_detail(request):
+def healthscore_detail(request):
 
     if request.method == 'GET':
-        healthScore = HealthScore.objects.all()
+        healthScore = HealthScore.objects.get(user=request.user)
         serializer = ScoreSerializer(healthScore, many=True)
         return Response(serializer.data)
 
@@ -49,24 +55,42 @@ def healthScore_detail(request):
         data['bmitext'] = bmicalculator(bmi)
         data['creatininetext'] = creatinine_cal(float(data['creatinine']))
         data['bloodsugartext'] = bloodsugar_cal(float(data['bloodsugar']))
-        data['cholesteroltext'] = bloodsugar_cal(float(data['cholesterol']))
-        data['bptext'] = bloodsugar_cal(float(data['diabp']),float(data['sysbp']))
-
+        data['cholesteroltext'] = cholesterol_cal(float(data['cholesterol']))
+        data['bptext'] = bp_cal(
+            float(data['diabp']), float(data['sysbp']))
 
         # SENDING A DUMMY EMAIL
-        subject = "Hello world"
-        message = "this the message of the email"
-        email_from = settings.EMAIL_HOST_USER
-        recepient_list = ['mayank9903261034@gmail.com']
-        send_mail(subject, message, email_from, recepient_list)
-        # print("mail sent")
-
+        sendmail(data)
         serializer = ScoreSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+# FUNCTION TO GENERATE HEALTH REPORT
+
+def sendmail(data):
+    ctx = {
+        'user': User.objects.get(id=data['user']).username,
+        'bloodsugar': data['bloodsugartext'],
+        'bmi': data['bmi'],
+        'bmitext': data['bmitext'],
+    }
+
+    message = get_template('mail.html').render(ctx)
+    msg = EmailMessage(
+        'HEALTH REPORT',
+        message,
+        settings.EMAIL_HOST_USER,
+        ['mayank9903261034@gmail.com'],
+    )
+    msg.content_subtype = "html"
+    msg.send()
+    print("Mail successfully sent")
+
+
+# FUNCTIONS TO CALCULATE HEALTH SCORE
 
 def bmicalculator(bmi):
     if(float(bmi) < 18.5):
@@ -78,13 +102,15 @@ def bmicalculator(bmi):
     else:
         return 'You are obese!'
 
+
 def creatinine_cal(cr):
     if(cr < 5):
-            return 'Creatinine levels are low!'
+        return 'Creatinine levels are low!'
     elif(cr >= 5 and cr <= 10):
         return 'Creatinine levels are okay!'
     else:
         return 'Creatinine levels are high!'
+
 
 def bloodsugar_cal(bs):
     if(bs < 5):
@@ -94,6 +120,7 @@ def bloodsugar_cal(bs):
     else:
         return 'Bloodsugar levels are high!'
 
+
 def cholesterol_cal(cl):
     if(cl < 5):
         return 'Cholesterol levels are low!'
@@ -101,13 +128,12 @@ def cholesterol_cal(cl):
         return 'Cholesterol levels are okay!'
     else:
         return 'Cholesterol levels are high!'
-        
-def bp_cal(sysbp,diabp):
+
+
+def bp_cal(sysbp, diabp):
     if(sysbp < 5 and diabp < 5):
         return 'Blood pressure levels are low!'
     elif(sysbp >= 5 and sysbp <= 10 and diabp >= 5 and diabp <= 10):
         return 'Blood pressure levels are okay!'
     else:
         return 'Blood pressure levels are high!'
-
-

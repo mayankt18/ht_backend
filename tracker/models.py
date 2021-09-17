@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+import cloudinary
 
 
 class Prescription(models.Model):
@@ -42,8 +43,8 @@ class HealthScore(models.Model):
     cholesterol = models.IntegerField(choices=TRACKER, default=TRACKER[0][0])
     sysbp = models.IntegerField(choices=TRACKER, default=TRACKER[0][0])
     diabp = models.IntegerField(choices=TRACKER, default=TRACKER[0][0])
-    total = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True)
+    # total = models.DecimalField(
+    #     max_digits=10, decimal_places=2, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
