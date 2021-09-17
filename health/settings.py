@@ -30,7 +30,15 @@ SECRET_KEY = 'django-insecure-d@tp0@@8kp172h^n*%m&zm4)f_rro9(%!r$#7_a@#svpwl1(4j
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "*"
+    "https://pres-cribe.herokuapp.com",
+    "127.0.0.1",
+    "localhost"
+]
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = [
+    '*'
 ]
 
 
@@ -49,6 +57,7 @@ INSTALLED_APPS = [
     'api',
     'tracker',
     'cloudinary',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -59,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'health.urls'
