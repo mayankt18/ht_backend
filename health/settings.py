@@ -38,6 +38,9 @@ CORS_ALLOW_CREDENTIALS = False
 #     'http://localhost:3000/',
 # )
 
+CSRF_TRUSTED_ORIGINS = [
+    "*",
+]
 
 # Application definition
 
