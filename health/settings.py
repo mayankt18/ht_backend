@@ -14,7 +14,7 @@ import cloudinary.api
 import cloudinary.uploader
 import cloudinary
 from pathlib import Path
-import os 
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,7 +32,10 @@ DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+)
 
 
 # Application definition
