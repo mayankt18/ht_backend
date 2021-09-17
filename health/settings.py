@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-d@tp0@@8kp172h^n*%m&zm4)f_rro9(%!r$#7_a@#svpwl1(4j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['pres-cribe.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -54,10 +54,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'knox',
+    'corsheaders',
     'api',
     'tracker',
     'cloudinary',
-    'corsheaders'
 ]
 
 MIDDLEWARE = [
