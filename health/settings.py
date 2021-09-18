@@ -16,20 +16,6 @@ import cloudinary.uploader
 import cloudinary
 from pathlib import Path
 import os
-<<<<<<< HEAD
-from boto.s3.connection import S3Connection
-# import dj_database_url
-
-
-# import psycopg2
-# # os.environ['DATABASE_URL']
-# DATABASE_URL = os.environ('DATABASE_URL')
-
-# conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-
-# s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
-=======
->>>>>>> parent of 8731351 (cors error)
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
