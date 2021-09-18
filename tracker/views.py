@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from .models import *
@@ -22,9 +23,13 @@ from rest_framework import permissions
 def prescription(request):
     # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     if request.method == 'GET':
-        prescription = Prescription.objects.all()
-        serializer = PrescriptionSerializer(prescription, many=True)
-        return Response(serializer.data)
+        if request.user.is_authenticated:
+            user = request.user
+            prescription = Prescription.objects.filter(user=user.id)
+            serializer = PrescriptionSerializer(prescription, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
@@ -40,9 +45,13 @@ def prescription(request):
 def healthscore_detail(request):
 
     if request.method == 'GET':
-        healthScore = HealthScore.objects.get(user=request.user)
-        serializer = ScoreSerializer(healthScore, many=True)
-        return Response(serializer.data)
+        if request.user.is_authenticated:
+            user = request.user
+            healthScore = HealthScore.objects.filter(user=user.id)
+            serializer = ScoreSerializer(healthScore, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
@@ -58,6 +67,7 @@ def healthscore_detail(request):
         data['cholesteroltext'] = cholesterol_cal(float(data['cholesterol']))
         data['bptext'] = bp_cal(
             float(data['diabp']), float(data['sysbp']))
+        # data['user'] = User.objects.get()
 
         # SENDING A DUMMY EMAIL
         sendmail(data)
