@@ -167,8 +167,8 @@ cloudinary.config(
 
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'mayankt1807@gmail.com'
-EMAIL_HOST_PASSWORD = 'Rounak@2007'
+EMAIL_HOST_USER = ''  # email here
+EMAIL_HOST_PASSWORD = ''  # password here
 EMAIL_PORT = '465'
 
 # Activate Django-Heroku.
