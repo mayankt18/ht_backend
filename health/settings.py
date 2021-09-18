@@ -16,6 +16,7 @@ import cloudinary.uploader
 import cloudinary
 from pathlib import Path
 import os
+<<<<<<< HEAD
 from boto.s3.connection import S3Connection
 # import dj_database_url
 
@@ -27,6 +28,8 @@ from boto.s3.connection import S3Connection
 # conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 # s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
+=======
+>>>>>>> parent of 8731351 (cors error)
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -181,5 +184,3 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'mayankt1807@gmail.com'
 EMAIL_HOST_PASSWORD = 'Rounak@2007'
 EMAIL_PORT = '465'
-
-django_heroku.settings(locals())
