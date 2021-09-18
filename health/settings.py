@@ -178,8 +178,8 @@ cloudinary.config(
 
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.environ('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = 'mayankt1807@gmail.com'
+EMAIL_HOST_PASSWORD = 'Rounak@2007'
 EMAIL_PORT = '465'
 
 django_heroku.settings(locals())
