@@ -17,16 +17,16 @@ import cloudinary
 from pathlib import Path
 import os
 from boto.s3.connection import S3Connection
-import dj_database_url
+# import dj_database_url
 
 
-import psycopg2
+# import psycopg2
+# # os.environ['DATABASE_URL']
+# DATABASE_URL = os.environ('DATABASE_URL')
 
-DATABASE_URL = os.environ['DATABASE_URL']
+# conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-
-s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
+# s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -109,13 +109,12 @@ WSGI_APPLICATION = 'health.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-
-DATABASES['default'] = dj_database_url.config(
-    conn_max_age=600, ssl_require=True)
+# DATABASES['default'] = dj_database_url.config(
+#     conn_max_age=600, ssl_require=True)
 
 
 # Password validation
