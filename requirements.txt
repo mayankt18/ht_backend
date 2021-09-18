@@ -25,6 +25,7 @@ knox==0.1.14
 loguru==0.5.3
 MarkupSafe==2.0.1
 psycopg2==2.9.1
+psycopg2-binary
 pycodestyle==2.7.0
 pycparser==2.20
 python-dateutil==2.8.2
