@@ -10,12 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import django_heroku
 import cloudinary.api
 import cloudinary.uploader
 import cloudinary
 from pathlib import Path
 import os
-import django_heroku
+from boto.s3.connection import S3Connection
+s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-d@tp0@@8kp172h^n*%m&zm4)f_rro9(%!r$#7_a@#svpwl1(4j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -164,8 +166,8 @@ cloudinary.config(
 
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'mayank1807@gmail.com'
-EMAIL_HOST_PASSWORD = 'Rainman@65'
+EMAIL_HOST_USER = os.environ('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = '465'
 
 django_heroku.settings(locals())

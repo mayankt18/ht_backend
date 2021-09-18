@@ -78,12 +78,13 @@ def sendmail(data):
         'bmitext': data['bmitext'],
     }
 
+    mail = User.objects.get(id=data['user']).email
     message = get_template('mail.html').render(ctx)
     msg = EmailMessage(
         'HEALTH REPORT',
         message,
         settings.EMAIL_HOST_USER,
-        ['mayank9903261034@gmail.com'],
+        [mail],
     )
     msg.content_subtype = "html"
     msg.send()
@@ -91,6 +92,7 @@ def sendmail(data):
 
 
 # FUNCTIONS TO CALCULATE HEALTH SCORE
+
 
 def bmicalculator(bmi):
     if(float(bmi) < 18.5):
