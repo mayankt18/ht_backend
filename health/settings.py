@@ -160,15 +160,15 @@ REST_FRAMEWORK = {
 
 # adding config
 cloudinary.config(
-    cloud_name="saitama",
-    api_key="976267789611673",
-    api_secret="fjtr6wMXrh_j-WY53HAtxzD1cVs"
+    cloud_name=
+    api_key=
+    api_secret=
 )
 
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'mayankt1807@gmail.com'  # email here
-EMAIL_HOST_PASSWORD = 'Rounak@2007'  # password here
+EMAIL_HOST_USER = 
+EMAIL_HOST_PASSWORD = 
 EMAIL_PORT = '465'
 
 # Activate Django-Heroku.
